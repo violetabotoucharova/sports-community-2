@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/app.css" />
+    <title>Profile | Sports Community</title>
+  </head>
+  <body>
+    <div id="nav-root"></div>
+    <main class="page">
+      <h2 class="page__title" id="title">Edit profile</h2>
+      <p class="muted" id="subtitle"></p>
+
+      <form id="profile-form" class="card form">
+        <div class="avatar-row">
+          <div id="avatar-preview"></div>
+          <div>
+            <label for="avatar">Profile photo (png, jpg, webp, max 2 MB)</label>
+            <input type="file" id="avatar" accept="image/png,image/jpeg,image/webp" />
+          </div>
+        </div>
+
+        <label for="city">City</label>
+        <input type="text" id="city" maxlength="80" placeholder="Where do you play?" />
+
+        <label for="bio">About you</label>
+        <textarea id="bio" rows="4" maxlength="500" placeholder="A few words about you"></textarea>
+
+        <label>Your sports</label>
+        <div class="chips" id="sports"></div>
+
+        <button type="submit" class="btn btn__primary">SAVE</button>
+        <p id="msg" class="msg"></p>
+        <a href="/activities.html" id="skip" style="text-align:center; display:none;">Skip for now</a>
+      </form>
+    </main>
+
+    <script src="/app.js"></script>
+    <script>
+      (async () => {
+        renderNav();
+        const welcome = new URLSearchParams(location.search).has("welcome");
+        const msg = document.getElementById("msg");
+
+        if (welcome) {
+          document.getElementById("title").textContent = "Welcome! Set up your profile";
+          document.getElementById("subtitle").textContent = "Tell people what you like to play. You can change this later.";
+          document.getElementById("skip").style.display = "block";
+        }
+
+        const me = (await api("/api/me")).data;
+        const [sportsRes, profileRes] = await Promise.all([
+          api("/api/sports"),
+          api("/api/profile/" + encodeURIComponent(me.username)),
+        ]);
+        const profile = profileRes.data;
+
+        document.getElementById("avatar-preview").innerHTML = avatar(profile, "avatar avatar--lg");
+        document.getElementById("city").value = profile.city;
+        document.getElementById("bio").value = profile.bio;
+
+        const chosen = new Set(profile.sports.map((s) => s.id));
+        document.getElementById("sports").innerHTML = sportsRes.data.map((s) => `
+          <label class="chip">
+            <input type="checkbox" value="${s.id}" ${chosen.has(s.id) ? "checked" : ""} />
+            <span>${esc(s.name)}</span>
+          </label>`).join("");
+
+        document.getElementById("profile-form").addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const sport_ids = [...document.querySelectorAll("#sports input:checked")].map((i) => Number(i.value));
+
+          const res = await api("/api/profile", {
+            method: "PUT",
+            body: {
+              city: document.getElementById("city").value,
+              bio: document.getElementById("bio").value,
+              sport_ids,
+            },
+          });
+          if (!res.ok) return showMessage(msg, res.data.error);
+
+          const file = document.getElementById("avatar").files[0];
+          if (file) {
+            const form = new FormData();
+            form.append("avatar", file);
+            const up = await api("/api/profile/avatar", { method: "POST", body: form });
+            if (!up.ok) return showMessage(msg, up.data.error);
+          }
+          window.location.href = "/profile.html";
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,96 @@
+.signin {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background-color: var(--background);
+}
+
+.signin__card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem 2rem;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.signin__logo img {
+  max-width: 250px;
+  margin: 0 auto 1rem;
+}
+
+.signin__card h2 {
+  font-family: var(--header-font);
+  font-size: 2rem;
+  color: var(--text-dark);
+}
+
+.signin__card > p {
+  margin: 0.5rem 0 2rem;
+  color: var(--text-light);
+}
+
+.signin__card form {
+  display: grid;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.signin__card label {
+  font-family: var(--header-font);
+  color: var(--text-dark);
+}
+
+.signin__card input {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--accent-color);
+  border-radius: 4px;
+  font-family: inherit;
+  outline: none;
+}
+
+.signin__card input:focus {
+  border-color: var(--primary-color);
+}
+
+.signin__footer {
+  margin-top: 1.5rem;
+  color: var(--text-light);
+}
+
+.signin__footer a,
+.signin__back {
+  color: var(--primary-color);
+}
+
+.signin__back {
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.signin__card .btn {
+  margin-top: 1rem;
+  padding: 0.9rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-family: var(--header-font);
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  color: var(--white);
+  background-color: var(--primary-color);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.signin__card .btn:hover {
+  background-color: var(--primary-color-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(52, 78, 65, 0.3);
+}
+
+.signin__card .btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/app.css" />
+    <title>Activity | Sports Community</title>
+  </head>
+  <body>
+    <div id="nav-root"></div>
+    <main class="page">
+      <a href="/activities.html">← All activities</a>
+      <div id="detail" class="card" style="margin-top:1rem"></div>
+      <p id="msg" class="msg"></p>
+    </main>
+
+    <script src="/app.js"></script>
+    <script>
+      renderNav();
+      const id = new URLSearchParams(location.search).get("id");
+      const box = document.getElementById("detail");
+      const msg = document.getElementById("msg");
+
+      async function load() {
+        const res = await api("/api/activities/" + encodeURIComponent(id));
+        if (!res.ok) { box.innerHTML = `<p>${esc(res.data.error || "Not found.")}</p>`; return; }
+        const a = res.data;
+        const full = a.participants_count >= a.max_participants;
+
+        let button = "";
+        if (a.is_creator) {
+          button = '<button class="btn btn--danger" id="delete">DELETE ACTIVITY</button>';
+        } else if (a.joined) {
+          button = '<button class="btn btn--outline" id="leave">LEAVE</button>';
+        } else if (full) {
+          button = '<button class="btn" disabled style="background:#999">FULL</button>';
+        } else {
+          button = '<button class="btn btn__primary" id="join">JOIN</button>';
+        }
+
+        box.innerHTML = `
+          <span class="badge">${esc(a.sport.name)}</span>
+          <h2 class="page__title" style="margin-top:0.5rem">${esc(a.title)}</h2>
+          <p class="muted"><i class="ri-calendar-line"></i> ${esc(formatDate(a.starts_at))}</p>
+          <p class="muted"><i class="ri-map-pin-line"></i> ${esc(a.location)}</p>
+          <p style="margin-top:1rem">${a.description ? esc(a.description) : '<span class="muted">No description.</span>'}</p>
+
+          <h4 style="margin-top:1.5rem">Organizer</h4>
+          <div class="people">
+            <a class="person" href="/profile.html?u=${encodeURIComponent(a.creator.username)}">
+              ${avatar(a.creator)} <span>${esc(a.creator.username)}</span>
+            </a>
+          </div>
+
+          <h4 style="margin-top:1.5rem">Participants (${a.participants_count} / ${a.max_participants})</h4>
+          <div class="people">
+            ${a.participants.map((p) => `
+              <a class="person" href="/profile.html?u=${encodeURIComponent(p.username)}">
+                ${avatar(p)} <span>${esc(p.username)}</span>
+              </a>`).join("")}
+          </div>
+
+          <div class="actions">${button}</div>`;
+
+        const act = async (url, options) => {
+          const r = await api(url, options);
+          if (!r.ok) return showMessage(msg, r.data.error);
+          msg.textContent = "";
+          load();
+        };
+        const join = document.getElementById("join");
+        const leave = document.getElementById("leave");
+        const del = document.getElementById("delete");
+        if (join) join.onclick = () => act(`/api/activities/${a.id}/join`, { method: "POST" });
+        if (leave) leave.onclick = () => act(`/api/activities/${a.id}/leave`, { method: "POST" });
+        if (del) del.onclick = async () => {
+          if (!confirm("Delete this activity for everyone?")) return;
+          const r = await api(`/api/activities/${a.id}`, { method: "DELETE" });
+          if (r.ok) window.location.href = "/activities.html";
+          else showMessage(msg, r.data.error);
+        };
+      }
+      load();
+    </script>
+  </body>
+</html>

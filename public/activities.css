@@ -1,0 +1,50 @@
+.activities {
+  padding-top: 8rem; /* room for the fixed navbar on phones */
+}
+
+.activities__sub {
+  margin-top: 0.5rem;
+  text-align: center;
+  color: var(--text-light);
+}
+
+.activities__grid {
+  margin-top: 3rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.activity__card {
+  padding: 2rem;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.activity__card h4 {
+  margin-bottom: 0.5rem;
+  font-family: var(--header-font);
+  font-size: 1.5rem;
+  color: var(--text-dark);
+}
+
+.activity__card p {
+  margin-bottom: 1.5rem;
+  color: var(--text-light);
+}
+
+@media (width > 540px) {
+  .activities__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width > 768px) {
+  .activities {
+    padding-top: 4rem; /* the navbar isn't fixed on desktop */
+  }
+
+  .activities__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

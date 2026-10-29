@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="signin.css" />
+    <link rel="stylesheet" href="app.css" />
+    <title>Sign Up | Sports Community</title>
+  </head>
+  <body>
+    <main class="signin">
+      <div class="signin__card">
+        <a href="index.html" class="signin__logo"><img src="logoprimary.svg" alt="logo" /></a>
+        <h2>Join the community</h2>
+        <p>Create an account to find your game and meet your people.</p>
+
+        <form id="signup-form">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="you@example.com" required />
+
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="3-30 characters" minlength="3" maxlength="30" required />
+
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="At least 8 characters" minlength="8" required />
+
+          <button type="submit" class="btn btn__primary">SIGN UP</button>
+          <p id="form-error" style="color: #b00020; text-align: center;"></p>
+        </form>
+
+        <p class="signin__footer">Already have an account? <a href="signin.html">Sign in</a></p>
+        <a href="index.html" class="signin__back">← Back to home</a>
+      </div>
+    </main>
+
+    <script>
+      document.getElementById("signup-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const errorBox = document.getElementById("form-error");
+        errorBox.textContent = "";
+        try {
+          const res = await fetch("/api/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: document.getElementById("email").value,
+              username: document.getElementById("username").value,
+              password: document.getElementById("password").value,
+            }),
+          });
+          const data = await res.json();
+          if (res.ok) window.location.href = "/edit-profile.html?welcome=1";
+          else errorBox.textContent = data.error;
+        } catch (err) {
+          errorBox.textContent = "Could not reach the server. Is it running?";
+        }
+      });
+    </script>
+  </body>
+</html>

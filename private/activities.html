@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/activities.css" />
+    <link rel="stylesheet" href="/app.css" />
+    <title>Find Activities | Play Together</title>
+  </head>
+  <body>
+    <div id="nav-root"></div>
+
+    <main class="section__container activities">
+      <h2 class="section__header">FIND YOUR GAME</h2>
+      <p class="activities__sub">Pick an activity and join people nearby.</p>
+      <div id="activities-message" class="msg" role="status"></div>
+      <div id="activities-grid" class="activities__grid"></div>
+    </main>
+
+    <script src="/app.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        renderNav();
+
+        const grid = document.getElementById("activities-grid");
+        const message = document.getElementById("activities-message");
+        let currentUser = null;
+
+        function displayMessage(text, isError = true) {
+          message.textContent = text;
+          message.className = "msg " + (isError ? "msg--error" : "msg--ok");
+        }
+
+        function renderActivity(activity) {
+          const isCreator = activity.creator.id === currentUser.id;
+          let buttonText = "JOIN";
+          let buttonDisabled = false;
+
+          if (isCreator) {
+            buttonText = "YOUR ACTIVITY";
+            buttonDisabled = true;
+          } else if (activity.joined) {
+            buttonText = "LEAVE";
+          } else if (activity.participants_count >= activity.max_participants) {
+            buttonText = "FULL";
+            buttonDisabled = true;
+          }
+
+          return `
+            <article class="activity__card">
+              <h4>${esc(activity.title)}</h4>
+              <p>${esc(activity.sport.name)}</p>
+              <p>${esc(activity.location)}</p>
+              <p>${esc(formatDate(activity.starts_at))}</p>
+              <p>${activity.participants_count} / ${activity.max_participants} participants</p>
+              <p>Organised by ${esc(activity.creator.username)}</p>
+              <button
+                class="btn btn__primary activity-action"
+                data-id="${activity.id}"
+                data-joined="${activity.joined}"
+                ${buttonDisabled ? "disabled" : ""}
+                type="button"
+              >${buttonText}</button>
+              <p class="activity-message msg" role="status"></p>
+            </article>
+          `;
+        }
+
+        async function loadActivities() {
+          const result = await api("/api/activities");
+
+          if (!result.ok) {
+            grid.innerHTML = "";
+            displayMessage(result.data.error || "Could not load activities.");
+            return;
+          }
+
+          grid.innerHTML = "";
+
+          if (!result.data.length) {
+            displayMessage("There are no upcoming activities yet. Be the first to create one!", false);
+            return;
+          }
+
+          message.textContent = "";
+          message.className = "msg";
+          grid.innerHTML = result.data.map(renderActivity).join("");
+        }
+
+        const meResult = await api("/api/me");
+
+        if (!meResult.ok || !meResult.data.loggedIn) {
+          displayMessage("Please sign in to find and join activities.");
+          return;
+        }
+
+        currentUser = meResult.data;
+        await loadActivities();
+
+        grid.addEventListener("click", async (event) => {
+          const button = event.target.closest(".activity-action");
+
+          if (!button || button.disabled) return;
+
+          const activityId = button.dataset.id;
+          const joined = button.dataset.joined === "true";
+          const card = button.closest(".activity__card");
+          const cardMessage = card.querySelector(".activity-message");
+
+          button.disabled = true;
+          button.textContent = joined ? "LEAVING..." : "JOINING...";
+          cardMessage.textContent = "";
+
+          const result = await api(
+            `/api/activities/${activityId}/${joined ? "leave" : "join"}`,
+            { method: "POST" }
+          );
+
+          if (!result.ok) {
+            button.disabled = false;
+            button.textContent = joined ? "LEAVE" : "JOIN";
+            cardMessage.textContent = result.data.error || "Something went wrong.";
+            cardMessage.className = "activity-message msg msg--error";
+            return;
+          }
+
+          displayMessage(
+            joined ? "You left the activity." : "You successfully joined the activity.",
+            false
+          );
+
+          await loadActivities();
+        });
+      });
+    </script>
+  </body>
+</html>

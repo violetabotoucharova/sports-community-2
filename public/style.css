@@ -1,106 +1,139 @@
 @import url('https://fonts.googleapis.com/css2?family=Contrail+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap');
 
 :root {
-    --primary-color: #588157;
-    --primary-color-dark: #344E41;
-    --primary-color-hover: #3F6B45;
-    --accent-color: #A3B18A;
-    --text-dark: #344E41;
-    --text-light: #5C6B5F;
-    --extra-light: #DAD7CD;
-    --background: #F8F7F2;
-    --white: #FFFFFF;
-    --max-width: 1200px;
-    --header-font: "Oswald", sans-serif;
+  --primary-color: #588157;
+  --primary-color-dark: #2A4034;
+  --primary-color-hover: #3F6B45;
+  --accent-color: #A3B18A;
+  --text-dark: #2A4034;
+  --text-light: #5C6B5F;
+  --extra-light: #DAD7CD;
+  --background: #F8F7F2;
+  --white: #FFFFFF;
+  --max-width: 1200px;
+  --header-font: "Oswald", sans-serif;
 }
 
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .section__container {
-    max-width: var(--max-width);
-    margin: auto;
-    padding: 5rem 1rem;
+  max-width: var(--max-width);
+  margin: auto;
+  padding: 5rem 1rem;
 }
 
 .section__header {
-    font-size: 2rem;
-    font-weight: 600;
-    font-family: var(--header-font);
-    color: var(--text-dark);
-    text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  font-family: var(--header-font);
+  color: var(--text-dark);
+  text-align: center;
 }
 
 .section__description {
-    color: var(--text-light);
+  color: var(--text-light);
+}
+
+.btn {
+  padding: 1.1rem 2.75rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-family: var(--header-font);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--white);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
 }
 
 .btn__primary {
-    background-color: var(--primary-color);
+  background-color: var(--primary-color);
+  box-shadow: 0 6px 18px rgba(88, 129, 87, 0.45);
 }
 
 .btn__primary:hover {
-    background-color: var(--primary-color-dark);
+  background-color: var(--primary-color-dark);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
 }
 
+/* Outlined white: READ MORE */
 .btn__secondary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+  background-color: transparent;
+  border-color: var(--white);
+}
+
+.btn__secondary:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.footer__col form .btn {
+  padding: 1rem 1.75rem;
+  border-radius: 2px;
+  box-shadow: none;
 }
 
 img {
-    display: flex;
-    width: 100%;
+  display: flex;
+  width: 100%;
 }
 
 a {
-    text-decoration: none;
-    transition: 0.3s;
+  text-decoration: none;
+  transition: 0.3s;
 }
 
 html,
 body {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 body {
-    font-family: "Contrail One", sans-serif;
-    background-color: var(--background);
-    color: var(--text-dark);
+  font-family: "Contrail One", sans-serif;
+  background-color: var(--background);
+  color: var(--text-dark);
 }
 
 nav {
-    background-color: var(--text-dark);
-    position: fixed;
-    width: 100%;
-    z-index: 9;
+  background-color: var(--text-dark);
+  position: fixed;
+  width: 100%;
+  z-index: 9;
 }
 
 .nav__bar {
-    width: 100%;
-    max-width: var(--max-width);
-    margin-Inline: auto;
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
 }
 
 .nav__header {
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: var(--text-dark);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--text-dark);
 }
 
 .nav__logo {
-    max-width: 90px;
+  max-width: 90px;
 }
 
 .nav__menu__btn {
-    font-size: 1.5rem;
-    color: var(--white);
-    cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--white);
+  cursor: pointer;
 }
 
 .nav__links {
@@ -137,13 +170,27 @@ nav {
   color: var(--primary-color);
 }
 
+.nav__links a.nav__signin {
+  padding: 0.5rem 1.25rem;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: 2px solid var(--primary-color);
+  border-radius: 4px;
+  transition: 0.3s;
+}
+
+.nav__links a.nav__signin:hover {
+  background-color: transparent;
+  color: var(--white);
+}
+
 .header {
   background-image: linear-gradient(
       to right,
-      rgba(0, 0, 0, 0.2),
-      rgba(0, 0, 0, 0.8)
+      rgba(0, 0, 0, 0.75),
+      rgba(0, 0, 0, 0.1)
     ),
-    url("https://images.unsplash.com/photo-1603463262427-06b6e34fb077?auto=format&fit=crop&w=1920&q=80");
+    url("background.svg");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -240,7 +287,7 @@ nav {
 }
 
 .session__card {
-  padding: 5rem 2rem;
+  padding: 3rem 1.5rem;
   text-align: center;
   background-size: cover;
   background-position: center center;
@@ -272,7 +319,7 @@ nav {
   isolation: isolate;
   max-width: fit-content;
   margin-inline: auto;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   font-size: 2rem;
   font-weight: 500;
   font-family: var(--header-font);
@@ -293,8 +340,13 @@ nav {
 .session__card p {
   max-width: 350px;
   margin-inline: auto;
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
   color: var(--extra-light);
+}
+
+.session__card .btn {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
 }
 
 .trainer__grid {
@@ -614,7 +666,7 @@ nav {
   }
 
   .session__card {
-    padding: 7rem 2rem;
+    padding: 3.5rem 2rem;
   }
 
   .trainer__grid {
@@ -637,7 +689,7 @@ nav {
 @media (width > 768px) {
   nav {
     position: static;
-    padding: 1.5rem 1rem;
+    padding: 1.5rem 1rem 1.5rem 0.5rem;
   }
 
   .nav__bar {
@@ -645,15 +697,23 @@ nav {
     align-items: center;
     justify-content: space-between;
     gap: 2rem;
+    height: 80px;
+    max-width: none;
   }
 
   .nav__header {
     padding: 0;
     background-color: transparent;
+    flex-shrink: 0;
+  }
+
+  .nav__logo {
+    max-width: none;
   }
 
   .nav__logo img {
-    max-width: 120px;
+    width: 250px;
+    max-width: none;
   }
 
   .nav__menu__btn {
@@ -671,12 +731,13 @@ nav {
   }
 
   .header__container {
-    padding-block: 12rem;
+    padding-top: 16rem;
+    padding-bottom: 8rem;
     grid-template-columns: repeat(2, 1fr);
   }
 
   .header__content {
-    grid-column: 2/3;
+    grid-column: 1/2;
   }
 
   .about__header {
@@ -703,7 +764,7 @@ nav {
   }
 
   .session__card {
-    padding: 10rem 2rem;
+    padding: 4rem 2rem;
   }
 
   .trainer__grid {

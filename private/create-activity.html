@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/app.css" />
+    <title>Create Activity | Sports Community</title>
+  </head>
+  <body>
+    <div id="nav-root"></div>
+    <main class="page">
+      <h2 class="page__title">Create an activity</h2>
+      <p class="muted">Organize a game and let others join.</p>
+
+      <form id="activity-form" class="card form">
+        <label for="title">Title</label>
+        <input type="text" id="title" maxlength="100" placeholder="Sunday 5-a-side football" required />
+
+        <label for="sport">Sport</label>
+        <select id="sport" required><option value="">Choose a sport</option></select>
+
+        <label for="starts_at">Date and time</label>
+        <input type="datetime-local" id="starts_at" required />
+
+        <label for="location">Location</label>
+        <input type="text" id="location" maxlength="120" placeholder="Park, court or address" required />
+
+        <label for="max">Max participants</label>
+        <input type="number" id="max" min="2" max="100" value="10" required />
+
+        <label for="description">Description</label>
+        <textarea id="description" rows="4" maxlength="1000" placeholder="Level, what to bring, etc."></textarea>
+
+        <button type="submit" class="btn btn__primary">CREATE</button>
+        <p id="msg" class="msg"></p>
+      </form>
+    </main>
+
+    <script src="/app.js"></script>
+    <script>
+      (async () => {
+        renderNav();
+        const msg = document.getElementById("msg");
+
+        const sports = await api("/api/sports");
+        document.getElementById("sport").innerHTML +=
+          sports.data.map((s) => `<option value="${s.id}">${esc(s.name)}</option>`).join("");
+
+        // don't allow picking a date in the past
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById("starts_at").min = now.toISOString().slice(0, 16);
+
+        document.getElementById("activity-form").addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const res = await api("/api/activities", {
+            method: "POST",
+            body: {
+              title: document.getElementById("title").value,
+              sport_id: Number(document.getElementById("sport").value),
+              starts_at: document.getElementById("starts_at").value,
+              location: document.getElementById("location").value,
+              max_participants: Number(document.getElementById("max").value),
+              description: document.getElementById("description").value,
+            },
+          });
+          if (res.ok) window.location.href = "/activity.html?id=" + res.data.id;
+          else showMessage(msg, res.data.error);
+        });
+      })();
+    </script>
+  </body>
+</html>

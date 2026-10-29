@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/app.css" />
+    <title>My Profile | Play Together</title>
+  </head>
+  <body>
+    <div id="nav-root"></div>
+
+    <main class="page">
+      <h2 class="page__title">My Profile</h2>
+      <div id="profile-message" class="msg" role="status"></div>
+      <div id="profile" class="card"></div>
+    </main>
+
+    <script src="/app.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        renderNav();
+
+        const box = document.getElementById("profile");
+        const message = document.getElementById("profile-message");
+
+        function showError(text) {
+          message.textContent = text;
+          message.className = "msg msg--error";
+          box.innerHTML = "";
+        }
+
+        const meResult = await api("/api/me");
+
+        if (!meResult.ok || !meResult.data.loggedIn || !meResult.data.username) {
+          showError("Your session could not be verified. Please sign in again.");
+          return;
+        }
+
+        const result = await api(
+          "/api/profile/" + encodeURIComponent(meResult.data.username)
+        );
+
+        if (!result.ok) {
+          showError(result.data.error || "Could not load your profile.");
+          return;
+        }
+
+        const profile = result.data;
+        const sports = Array.isArray(profile.sports) ? profile.sports : [];
+
+        box.innerHTML = `
+          <div class="profile-head">
+            ${avatar(profile, "avatar avatar--lg")}
+            <div>
+              <h2 class="page__title">${esc(profile.username)}</h2>
+              <p class="muted">${profile.city ? esc(profile.city) : "No city set"}</p>
+            </div>
+          </div>
+
+          <h4 style="margin-top:1.5rem">About</h4>
+          <p>${profile.bio ? esc(profile.bio) : '<span class="muted">No bio yet.</span>'}</p>
+
+          <h4 style="margin-top:1.5rem">Sports</h4>
+          <div class="people">
+            ${
+              sports.length
+                ? sports.map((sport) => `<span class="badge">${esc(sport.name)}</span>`).join("")
+                : '<span class="muted">No sports selected yet.</span>'
+            }
+          </div>
+
+          <div class="actions">
+            <a class="btn btn__primary" href="/edit-profile.html">EDIT PROFILE</a>
+            <a class="btn" href="/activities.html">FIND ACTIVITIES</a>
+          </div>
+        `;
+
+        message.textContent = "";
+        message.className = "msg";
+      });
+    </script>
+  </body>
+</html>

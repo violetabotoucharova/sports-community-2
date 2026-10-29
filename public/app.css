@@ -1,0 +1,67 @@
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-family: var(--header-font);
+  font-size: 1rem;
+  color: var(--white);
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn--outline { background: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+.btn--outline:hover { background: var(--primary-color); color: var(--white); }
+.btn--danger { background: #b00020; }
+.btn--danger:hover { background: #800018; }
+
+.page { max-width: 1000px; margin: auto; padding: 6.5rem 1rem 4rem; }
+@media (width > 768px) { .page { padding-top: 2rem; } }
+
+.page__title { font-family: var(--header-font); font-size: 2rem; color: var(--text-dark); }
+.muted { color: var(--text-light); margin-top: 0.25rem; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;
+           justify-content: space-between; margin: 1.5rem 0; }
+
+.card { background: var(--white); border-radius: 8px; padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); }
+
+.form { display: grid; gap: 0.75rem; margin-top: 1.5rem; max-width: 600px; }
+.form label { font-family: var(--header-font); color: var(--text-dark); }
+.form input, .form textarea, .form select, .toolbar select {
+  padding: 0.7rem 1rem; border: 1px solid var(--accent-color); border-radius: 4px;
+  font-family: inherit; font-size: 1rem; background: var(--white); outline: none; width: 100%;
+}
+.toolbar select { width: auto; }
+.form input:focus, .form textarea:focus, .form select:focus { border-color: var(--primary-color); }
+
+.msg { min-height: 1.4em; text-align: center; }
+.msg--error { color: #b00020; }
+.msg--ok { color: var(--primary-color); }
+
+.grid { display: grid; gap: 1.5rem; }
+@media (width > 540px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (width > 900px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+.activity-card h4 { font-family: var(--header-font); font-size: 1.4rem; margin: 0.5rem 0; }
+.activity-card p { color: var(--text-light); margin-bottom: 0.4rem; }
+.activity-card .btn { display: inline-block; margin-top: 0.75rem; }
+
+.badge { display: inline-block; padding: 0.15rem 0.7rem; border-radius: 999px;
+         background: var(--accent-color); color: var(--text-dark); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip input { display: none; }
+.chip span { display: inline-block; padding: 0.4rem 1rem; border: 1px solid var(--accent-color);
+             border-radius: 999px; cursor: pointer; transition: 0.2s; }
+.chip input:checked + span { background: var(--primary-color); border-color: var(--primary-color); color: var(--white); }
+
+.avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.avatar--lg { width: 110px; height: 110px; font-size: 2.5rem; }
+.avatar--letter { display: inline-flex; align-items: center; justify-content: center;
+                  background: var(--primary-color); color: var(--white); font-family: var(--header-font); }
+
+.avatar-row { display: flex; align-items: center; gap: 1rem; }
+.profile-head { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+.people { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.75rem; }
+.person { display: flex; align-items: center; gap: 0.5rem; color: var(--text-dark); }
+.actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
